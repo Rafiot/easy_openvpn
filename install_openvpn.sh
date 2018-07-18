@@ -30,7 +30,7 @@ echo 'Initiate the public key infrastructure'
 ./easyrsa --batch init-pki
 ./easyrsa --batch build-ca nopass
 
-./easyrsa --batch gen-req server nopass
+./easyrsa --batch --req-cn=server gen-req server nopass
 ./easyrsa --batch --req-cn=server sign-req server server
 
 echo 'Copy the PKI stuff'

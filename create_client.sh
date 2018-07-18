@@ -12,7 +12,7 @@ fi
 EASYRSA=3.0.4
 
 pushd EasyRSA-${EASYRSA}
-./easyrsa --batch gen-req ${1} nopass
+./easyrsa --batch --req-cn=${1} gen-req ${1} nopass
 ./easyrsa --batch --req-cn=${1} sign-req client ${1}
 popd
 
