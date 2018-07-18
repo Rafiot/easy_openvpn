@@ -5,6 +5,11 @@ set -x
 
 # Inspired by https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-18-04
 
+if [ -z "$1" ]
+  then
+    echo "Hostname was expected, breaking."
+    exit 1
+fi
 
 sudo apt install openvpn
 
@@ -26,7 +31,6 @@ echo 'Initiate the public key infrastructure'
 ./easyrsa build-ca nopass
 
 ./easyrsa gen-req server nopass
-./easyrsa import-req pki/reqs/server.req server
 ./easyrsa sign-req server server
 
 echo 'Copy the PKI stuff'
@@ -65,7 +69,7 @@ sudo ufw allow OpenSSH
 # Open VPN on 443, 80 and 53
 sudo ufw allow https
 sudo ufw allow http
-sudo ufw allow dns
+ufw allow 53/udp
 sudo ufw default allow FORWARD
 
 sudo cp before.rules /etc/ufw/before.rules
@@ -81,5 +85,4 @@ sudo systemctl enable openvpn@server443
 sudo systemctl enable openvpn@server80
 sudo systemctl enable openvpn@server53
 
-# TODO: change SET_HOSTNAME in the client base files
-
+sed -i 's/SET_HOSTNAME/${1}/g' client-configs/base*.conf
