@@ -27,18 +27,18 @@ pushd EasyRSA-${EASYRSA}
 
 echo 'Initiate the public key infrastructure'
 
-./easyrsa init-pki
-./easyrsa build-ca nopass
+./easyrsa --batch init-pki
+./easyrsa --batch build-ca nopass
 
-./easyrsa gen-req server nopass
-./easyrsa sign-req server server
+./easyrsa --batch gen-req server nopass
+./easyrsa --batch sign-req server server
 
 echo 'Copy the PKI stuff'
 sudo cp pki/private/server.key /etc/openvpn/
 sudo cp pki/issued/server.crt /etc/openvpn/
 sudo cp pki/ca.crt /etc/openvpn/
 
-./easyrsa gen-dh
+./easyrsa --batch gen-dh
 
 openvpn --genkey --secret ta.key
 

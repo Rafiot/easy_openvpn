@@ -12,8 +12,8 @@ fi
 EASYRSA=3.0.4
 
 pushd EasyRSA-${EASYRSA}
-./easyrsa gen-req ${1} nopass
-./easyrsa sign-req client ${1}
+./easyrsa --batch gen-req ${1} nopass
+./easyrsa --batch sign-req client ${1}
 popd
 
 KEY_DIR=./client-configs/keys/
