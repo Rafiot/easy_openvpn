@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your OpenVPN Config</title>
+</head>
+<body>
+<ul>
+{% for fn in filenames %}
+<li><a href = {{ url_for('download', uuid=uuid, filename=fn) }}>{{ fn }}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>

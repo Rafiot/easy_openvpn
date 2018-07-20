@@ -1,0 +1,9 @@
+server {
+    listen 31337;
+    server_name SET_HOSTNAME;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:SOCK_PATH;
+    }
+}

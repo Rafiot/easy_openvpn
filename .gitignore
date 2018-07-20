@@ -1,5 +1,9 @@
 *.swp
 
+client-configs/keys/*
+client-configs/files
+EasyRSA*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
