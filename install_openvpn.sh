@@ -11,6 +11,13 @@ if [ -z "$1" ]
     exit 1
 fi
 
+if [ -z "${VIRTUAL_ENV}" ]
+  then
+    echo "You have to run it from the virtual environment."
+    exit 1
+fi
+
+
 sudo apt -y update
 sudo apt -y dist-upgrade
 sudo apt -y install openvpn
@@ -44,11 +51,11 @@ popd
 mkdir -p client-configs/keys
 chmod -R 700 client-configs
 
-sed -i 's/SET_HOSTNAME/${1}/g' client-configs/base*.conf
-sed -i 's/SET_HOSTNAME/${1}/g' etc/nginx/sites-available/easy_openvpn
-sed -i 's/SOCK_PATH/`pwd`\/easy_openvpn.sock/g' etc/nginx/sites-available/easy_openvpn
-sed -i 's/REPO_DIR/`pwd`/g' etc/systemd/system/easy_openvpn.service
-sed -i 's/VIRTUAL_ENV/${VIRTUAL_ENV}/g' etc/systemd/system/easy_openvpn.service
+sed -i "s/SET_HOSTNAME/${1}/g" client-configs/base*.conf
+sed -i "s/SET_HOSTNAME/${1}/g" etc/nginx/sites-available/easy_openvpn
+sed -i "s:SOCK_PATH:`pwd`:g" etc/nginx/sites-available/easy_openvpn
+sed -i "s:REPO_DIR:`pwd`:g" etc/systemd/system/easy_openvpn.service
+sed -i "s:VIRTUAL_ENV:${VIRTUAL_ENV}:g" etc/systemd/system/easy_openvpn.service
 
 pushd EasyRSA-${EASYRSA}
 echo 'Copy the PKI stuff'
