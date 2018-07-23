@@ -11,16 +11,18 @@ if [ -z "$1" ]
     exit 1
 fi
 
+sudo apt -y update
+sudo apt -y dist-upgrade
+sudo apt -y install openvpn nginx python3-pip python3-venv certbot python-certbot-nginx
+
+python3 -m venv venv
+source venv/bin/activate
+
 if [ -z "${VIRTUAL_ENV}" ]
   then
     echo "You have to run it from the virtual environment."
     exit 1
 fi
-
-
-sudo apt -y update
-sudo apt -y dist-upgrade
-sudo apt -y install openvpn nginx python3-pip certbot python-certbot-nginx
 
 EASYRSA=3.0.4
 
@@ -55,9 +57,15 @@ chmod -R 700 client-configs
 
 sed -i "s/SET_HOSTNAME/${1}/g" client-configs/base*.conf
 sed -i "s/SET_HOSTNAME/${1}/g" etc/nginx/sites-available/easy_openvpn
-sed -i "s:SOCK_PATH:`pwd`:g" etc/nginx/sites-available/easy_openvpn
+sed -i "s:SOCK_PATH:`pwd`/easy_openvpn.sock:g" etc/nginx/sites-available/easy_openvpn
 sed -i "s:REPO_DIR:`pwd`:g" etc/systemd/system/easy_openvpn.service
 sed -i "s:VIRTUAL_ENV:${VIRTUAL_ENV}:g" etc/systemd/system/easy_openvpn.service
+
+pip install -U pip
+hash -r
+pip install -U -r requirements.txt
+
+exit 1
 
 ####### Requires root #############
 
