@@ -20,7 +20,7 @@ fi
 
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install openvpn
+sudo apt -y install openvpn nginx python3-pip certbot python-certbot-nginx
 
 EASYRSA=3.0.4
 
@@ -51,11 +51,15 @@ popd
 mkdir -p client-configs/keys
 chmod -R 700 client-configs
 
+# Prepare config files
+
 sed -i "s/SET_HOSTNAME/${1}/g" client-configs/base*.conf
 sed -i "s/SET_HOSTNAME/${1}/g" etc/nginx/sites-available/easy_openvpn
 sed -i "s:SOCK_PATH:`pwd`:g" etc/nginx/sites-available/easy_openvpn
 sed -i "s:REPO_DIR:`pwd`:g" etc/systemd/system/easy_openvpn.service
 sed -i "s:VIRTUAL_ENV:${VIRTUAL_ENV}:g" etc/systemd/system/easy_openvpn.service
+
+####### Requires root #############
 
 pushd EasyRSA-${EASYRSA}
 echo 'Copy the PKI stuff'
@@ -66,18 +70,27 @@ sudo cp ta.key /etc/openvpn/
 sudo cp pki/dh.pem /etc/openvpn/
 popd
 
-#################################################
+##### Link config files #####
 
-sudo cp server443.conf /etc/openvpn/
-# sudo cp server53.conf /etc/openvpn/
-sudo cp server80.conf /etc/openvpn/
+# OpenVPN
+sudo ln -s server443.conf /etc/openvpn/
+# sudo ln -s server53.conf /etc/openvpn/
+sudo ln -s server80.conf /etc/openvpn/
+
+# Nginx
+
+sudo ln -s etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
+sudo cp etc/systemd/system/easy_openvpn.service /etc/systemd/system/
+
+# Networking foo
 
 sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 sudo sed -i 's/#net.ipv6.conf.all.forwarding=1/net.ipv6.conf.all.forwarding=1/g' /etc/sysctl.conf
-
 sudo sysctl -p
 
-# duh
+# Firewall
+
 sudo ufw allow OpenSSH
 
 # Open VPN on 443, 80 and 53 (later)
@@ -91,11 +104,18 @@ sudo cp before.rules /etc/ufw/before.rules
 sudo ufw disable
 sudo ufw --force enable
 
+###### Systemd thingies ######
+
+# OpenVPN
+
 sudo systemctl start openvpn@server443
 sudo systemctl start openvpn@server80
 #sudo systemctl start openvpn@server53
-
 sudo systemctl enable openvpn@server443
 sudo systemctl enable openvpn@server80
 #sudo systemctl enable openvpn@server53
 
+# Web
+sudo systemctl start easy_openvpn
+sudo systemctl enable easy_openvpn
+sudo service nginx restart
