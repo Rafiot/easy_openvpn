@@ -81,14 +81,15 @@ popd
 ##### Link config files #####
 
 # OpenVPN
-sudo ln -s server443.conf /etc/openvpn/
+sudo cp server443.conf /etc/openvpn/
 # sudo ln -s server53.conf /etc/openvpn/
-sudo ln -s server80.conf /etc/openvpn/
+sudo cp server80.conf /etc/openvpn/
 
 # Nginx
 
-sudo ln -s etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-enabled/
 sudo rm /etc/nginx/sites-enabled/default
+sudo cp etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-enabled/
 sudo cp etc/systemd/system/easy_openvpn.service /etc/systemd/system/
 
 # Networking foo
@@ -104,6 +105,7 @@ sudo ufw allow OpenSSH
 # Open VPN on 443, 80 and 53 (later)
 sudo ufw allow https
 sudo ufw allow http
+sudo ufw allow 31337  # web interface
 # ufw allow 53/udp
 sudo ufw default allow FORWARD
 
