@@ -65,8 +65,6 @@ pip install -U pip
 hash -r
 pip install -U -r requirements.txt
 
-exit 1
-
 ####### Requires root #############
 
 pushd EasyRSA-${EASYRSA}
@@ -117,6 +115,8 @@ sudo ufw --force enable
 # Perms
 
 chown -R www-data:www-data ./
+# In the default installer, the clone takes place in /root, we need to let www-data enter in the directory.
+chmod go+rx ../
 
 ###### Systemd thingies ######
 
