@@ -114,6 +114,10 @@ sudo cp before.rules /etc/ufw/before.rules
 sudo ufw disable
 sudo ufw --force enable
 
+# Perms
+
+chown -R www-data:www-data ./
+
 ###### Systemd thingies ######
 
 # OpenVPN

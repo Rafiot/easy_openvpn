@@ -6,9 +6,9 @@ After=network.target
 User=www-data
 Group=www-data
 WorkingDirectory=REPO_DIR
-Environment="PATH=VIRTUAL_ENV/bin"
+Environment="PATH=VIRTUAL_ENV/bin:/bin:/usr/bin"
 ExecStart=VIRTUAL_ENV/bin/uwsgi --ini easy_openvpn.ini
-Environment=FLASK_APP=website.py
+Environment="FLASK_APP=website.py"
 
 [Install]
 WantedBy=multi-user.target
