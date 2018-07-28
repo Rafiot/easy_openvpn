@@ -33,3 +33,6 @@ def config(uuid):
 def download(uuid, filename):
     to_send = str(root_usr_config / uuid / filename)
     return send_file(to_send, attachment_filename=filename, as_attachment=True, mimetype='application/x-openvpn-profile')
+
+if __name__ == "__main__":
+    app.run()

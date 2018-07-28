@@ -2,6 +2,10 @@ server {
     listen 31337;
     server_name SET_HOSTNAME;
 
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/SET_HOSTNAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/SET_HOSTNAME/privkey.pem;
+
     location / {
         include uwsgi_params;
         uwsgi_pass unix:SOCK_PATH;

@@ -11,9 +11,27 @@ if [ -z "$1" ]
     exit 1
 fi
 
+if [ ! -f ./ovh_api.conf ]; then
+    echo "OVH config file not found, breaking."
+    exit 1
+fi
+
+# Prepare certbot stuff
+sudo apt -y update
+sudo apt -y install software-properties-common
+sudo add-apt-repository -y ppa:certbot/certbot
+# Install stuff
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install openvpn nginx python3-pip python3-venv certbot python-certbot-nginx
+sudo apt -y install openssl openvpn nginx python3-pip python3-venv certbot python-certbot-nginx
+# Install ovh dns module
+pip3 install certbot-dns-ovh
+
+# Create SSL certificate
+mkdir -p /etc/nginx/ovh_creds
+mv ovh_api.conf /etc/nginx/ovh_creds/
+
+certbot certonly --dns-ovh --dns-ovh-credentials /etc/nginx/ovh_creds/ovh_api.conf -d ${1}
 
 python3 -m venv venv
 source venv/bin/activate

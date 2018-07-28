@@ -1,0 +1,6 @@
+# See https://certbot-dns-ovh.readthedocs.io/en/stable/
+
+dns_ovh_endpoint = foo
+dns_ovh_application_key = bar
+dns_ovh_application_secret = baz
+dns_ovh_consumer_key = foobar

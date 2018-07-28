@@ -1,5 +1,7 @@
 *.swp
 
+ovh_api.conf
+
 client-configs/keys/*
 client-configs/files
 EasyRSA*
