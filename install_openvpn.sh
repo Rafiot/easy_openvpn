@@ -38,7 +38,7 @@ sudo pip3 install certbot-dns-ovh
 # Create SSL certificate
 sudo mkdir -p /etc/nginx/ovh_creds
 sudo mv ovh_api.conf /etc/nginx/ovh_creds/
-sudo chmod 600 /etc/nginx/ovh_creds/ ovh_api.conf
+sudo chmod 600 /etc/nginx/ovh_creds/ovh_api.conf
 
 sudo certbot certonly --dns-ovh --dns-ovh-credentials /etc/nginx/ovh_creds/ovh_api.conf -d ${1}
 
