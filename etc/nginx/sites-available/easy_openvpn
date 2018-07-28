@@ -7,6 +7,8 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/SET_HOSTNAME/privkey.pem;
 
     location / {
+        auth_basic "Ohai, Whatcha Wanna Do?";
+        auth_basic_user_file /etc/nginx/.htpasswd;
         include uwsgi_params;
         uwsgi_pass unix:SOCK_PATH;
     }

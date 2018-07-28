@@ -11,6 +11,14 @@ if [ -z "$1" ]
     exit 1
 fi
 
+if [ -z "$2" ]
+  then
+    echo "HTTP Basic auth password was expected, breaking."
+    exit 1
+else
+    echo $2 > basic_auth_pass
+fi
+
 if [ ! -f ./ovh_api.conf ]; then
     echo "OVH config file not found, breaking."
     exit 1
@@ -23,15 +31,19 @@ sudo add-apt-repository -y ppa:certbot/certbot
 # Install stuff
 sudo apt -y update
 sudo apt -y dist-upgrade
-sudo apt -y install openssl openvpn nginx python3-pip python3-venv certbot python-certbot-nginx
+sudo apt -y install openssl openvpn nginx python3-pip python3-venv certbot python-certbot-nginx haveged apache2-utils
 # Install ovh dns module
-pip3 install certbot-dns-ovh
+sudo pip3 install certbot-dns-ovh
 
 # Create SSL certificate
-mkdir -p /etc/nginx/ovh_creds
-mv ovh_api.conf /etc/nginx/ovh_creds/
+sudo mkdir -p /etc/nginx/ovh_creds
+sudo mv ovh_api.conf /etc/nginx/ovh_creds/
+sudo chmod 600 /etc/nginx/ovh_creds/ ovh_api.conf
 
-certbot certonly --dns-ovh --dns-ovh-credentials /etc/nginx/ovh_creds/ovh_api.conf -d ${1}
+sudo certbot certonly --dns-ovh --dns-ovh-credentials /etc/nginx/ovh_creds/ovh_api.conf -d ${1}
+
+# Create Basic Auth file
+sudo htpasswd -c -b /etc/nginx/.htpasswd openvpn ${2}
 
 python3 -m venv venv
 source venv/bin/activate
