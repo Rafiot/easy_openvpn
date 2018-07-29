@@ -115,7 +115,10 @@ sudo cp server80.conf /etc/openvpn/
 
 # Nginx
 
-sudo rm /etc/nginx/sites-enabled/default
+
+if [ -f /etc/nginx/sites-enabled/default ]; then
+    sudo rm /etc/nginx/sites-enabled/default
+fi
 sudo cp etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/easy_openvpn /etc/nginx/sites-enabled/
 sudo cp etc/systemd/system/easy_openvpn.service /etc/systemd/system/
